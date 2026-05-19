@@ -1,6 +1,6 @@
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-
+import base64
 
 # Generate RSA key pair
 def generate_rsa_keys(
@@ -41,7 +41,7 @@ def encrypt_aes_key(aes_key, public_key_path="keys/public.pem"):
     # Encrypt AES key
     encrypted_key = cipher_rsa.encrypt(aes_key)
 
-    return encrypted_key
+    return base64.b64encode(encrypted_key).decode()
 
 
 # Decrypt AES key using RSA private key
@@ -55,6 +55,8 @@ def decrypt_aes_key(encrypted_key, private_key_path="keys/private.pem"):
     cipher_rsa = PKCS1_OAEP.new(private_key)
 
     # Decrypt AES key
+    encrypted_key = base64.b64decode(encrypted_key)
+
     decrypted_key = cipher_rsa.decrypt(encrypted_key)
 
     return decrypted_key
