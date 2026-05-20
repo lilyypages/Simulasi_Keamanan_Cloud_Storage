@@ -1,35 +1,24 @@
 import json
+import logging
 import hashlib
 from datetime import datetime
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
 
-BLOCKCHAIN_FILE = "blockchain/blockchain.json"
+# Path relative to this file's location, not working directory
+BLOCKCHAIN_FILE = Path(__file__).parent / "blockchain.json"
 
 
-# Create SHA-256 hash for block
 def calculate_block_hash(block):
-
-    block_string = json.dumps(
-        block,
-        sort_keys=True
-    ).encode()
-
+    """Create SHA-256 hash for block."""
+    block_string = json.dumps(block, sort_keys=True).encode()
     return hashlib.sha256(block_string).hexdigest()
 
 
-# Load blockchain from JSON
 def load_blockchain():
-
-    # Create file if not exists
-    if not Path(BLOCKCHAIN_FILE).exists():
-
-        with open(BLOCKCHAIN_FILE, 'w') as f:
-            json.dump([], f)
-
-    # Handle empty file
-    if Path(BLOCKCHAIN_FILE).stat().st_size == 0:
-
+    """Load blockchain from JSON file."""
+    if not BLOCKCHAIN_FILE.exists() or BLOCKCHAIN_FILE.stat().st_size == 0:
         with open(BLOCKCHAIN_FILE, 'w') as f:
             json.dump([], f)
 
@@ -37,19 +26,16 @@ def load_blockchain():
         return json.load(f)
 
 
-# Save blockchain to JSON
 def save_blockchain(chain):
-
+    """Save blockchain to JSON file."""
     with open(BLOCKCHAIN_FILE, 'w') as f:
         json.dump(chain, f, indent=4)
 
 
-# Create genesis block
 def create_genesis_block():
-
+    """Create genesis block if not exists."""
     chain = load_blockchain()
 
-    # Skip if genesis already exists
     if len(chain) > 0:
         return
 
@@ -59,24 +45,17 @@ def create_genesis_block():
         "file_hash": "GENESIS_BLOCK",
         "previous_hash": "0"
     }
-
-    genesis_block["current_hash"] = calculate_block_hash(
-        genesis_block
-    )
+    genesis_block["current_hash"] = calculate_block_hash(genesis_block)
 
     chain.append(genesis_block)
-
     save_blockchain(chain)
+    logger.info("Genesis block created")
 
-    print("[+] Genesis block created")
 
-
-# Add new block
 def add_block(file_hash):
-
+    """Add new block to the blockchain."""
     chain = load_blockchain()
 
-    # Create genesis if blockchain empty
     if len(chain) == 0:
         create_genesis_block()
         chain = load_blockchain()
@@ -89,28 +68,20 @@ def add_block(file_hash):
         "file_hash": file_hash,
         "previous_hash": previous_block["current_hash"]
     }
-
-    # Generate current block hash
-    new_block["current_hash"] = calculate_block_hash(
-        new_block
-    )
+    new_block["current_hash"] = calculate_block_hash(new_block)
 
     chain.append(new_block)
-
     save_blockchain(chain)
-
-    print("[+] New block added")
+    logger.info(f"New block added (index: {new_block['index']})")
 
     return new_block
 
 
-# Verify blockchain integrity
 def verify_blockchain():
-
+    """Verify blockchain integrity by checking all hash linkages."""
     chain = load_blockchain()
 
     for i in range(1, len(chain)):
-
         current_block = chain[i]
         previous_block = chain[i - 1]
 
@@ -122,11 +93,9 @@ def verify_blockchain():
             "previous_hash": current_block["previous_hash"]
         })
 
-        # Check current hash
         if current_block["current_hash"] != recalculated_hash:
             return False
 
-        # Check previous hash linkage
         if current_block["previous_hash"] != previous_block["current_hash"]:
             return False
 
