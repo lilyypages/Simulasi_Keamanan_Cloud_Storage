@@ -4,14 +4,16 @@ import logging
 from crypto.aes_util import generate_aes_key, encrypt_file, decrypt_file
 from crypto.rsa_util import encrypt_aes_key, decrypt_aes_key
 from crypto.hash_util import generate_file_hash, verify_file_hash
-from blockchain.blockchain import add_block
+from blockchain.blockchain import add_block, verify_blockchain
 from stego.lsb import embed_metadata, extract_metadata
 
 logger = logging.getLogger(__name__)
 
 
 def secure_file(file_path, cover_image_path):
-    """Secure file workflow: encrypt, hash, blockchain, steganography."""
+    os.makedirs("storage/encrypted", exist_ok=True)
+    os.makedirs("storage/stego_images", exist_ok=True)
+    
     filename = os.path.basename(file_path)
     encrypted_file_path = f"storage/encrypted/{filename}.enc"
     stego_output_path = f"storage/stego_images/{filename}_stego.png"
@@ -53,8 +55,10 @@ def secure_file(file_path, cover_image_path):
     }
 
 
-def recover_file(encrypted_file_path, stego_image_path):
+def recover_file(encrypted_file_path, stego_image_path, rsa_passphrase=None):
     """Recover file workflow: extract metadata, verify, decrypt."""
+    os.makedirs("storage/decrypted", exist_ok=True)
+
     # 1. Extract metadata from stego image
     metadata = extract_metadata(stego_image_path)
 
@@ -65,14 +69,20 @@ def recover_file(encrypted_file_path, stego_image_path):
     original_hash = metadata["hash"]
     filename = metadata["filename"]
 
+
     # 2. Verify file integrity
+
+    if not verify_blockchain():
+        raise Exception("Blockchain verification failed — file may be tampered")
+    
+    # hash
     is_valid = verify_file_hash(encrypted_file_path, original_hash)
 
     if not is_valid:
         raise Exception("File integrity verification failed — file may have been tampered")
 
     # 3. Decrypt AES key using RSA private key
-    aes_key = decrypt_aes_key(encrypted_aes_key)
+    aes_key = decrypt_aes_key(encrypted_aes_key, passphrase=rsa_passphrase)
 
     # 4. Recover original file
     recovered_file_path = f"storage/decrypted/recovered_{filename}"

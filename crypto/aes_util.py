@@ -14,22 +14,26 @@ def generate_aes_key():
 
 
 def encrypt_file(input_path, output_path, key):
-    """Encrypt file using AES-256 CBC with chunked reading."""
+    """
+    Encrypt file using AES-256 CBC with proper PKCS7 padding.
+    Chunked mode implementation.
+    """
     iv = get_random_bytes(16)
     cipher = AES.new(key, AES.MODE_CBC, iv)
-
     with open(input_path, 'rb') as fin, open(output_path, 'wb') as fout:
+        # Write IV first
         fout.write(iv)
-
-        while True:
-            chunk = fin.read(CHUNK_SIZE)
-            if len(chunk) == 0:
-                break
-            elif len(chunk) % AES.block_size != 0:
-                # Last chunk — apply padding
+        # Read first chunk
+        chunk = fin.read(CHUNK_SIZE)
+        while chunk:
+            # Read next chunk to detect EOF
+            next_chunk = fin.read(CHUNK_SIZE)
+            # If this is final chunk → apply padding
+            if len(next_chunk) == 0:
                 chunk = pad(chunk, AES.block_size)
-            fout.write(cipher.encrypt(chunk))
-
+            encrypted_chunk = cipher.encrypt(chunk)
+            fout.write(encrypted_chunk)
+            chunk = next_chunk
     logger.info(f"File encrypted: {output_path}")
     return output_path
 
@@ -51,11 +55,11 @@ def decrypt_file(input_path, output_path, key):
     # Decrypt and write output
     with open(output_path, 'wb') as fout:
         for i, chunk in enumerate(chunks):
-            decrypted = cipher.decrypt(chunk)
+            decrypted_chunk = cipher.decrypt(chunk)
             if i == len(chunks) - 1:
                 # Last chunk — remove padding
-                decrypted = unpad(decrypted, AES.block_size)
-            fout.write(decrypted)
+                decrypted_chunk = unpad(decrypted_chunk, AES.block_size)
+            fout.write(decrypted_chunk)
 
     logger.info(f"File decrypted: {output_path}")
     return output_path
