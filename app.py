@@ -39,13 +39,21 @@ st.markdown("""
 
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Outfit', sans-serif;
-    background-color: #0b0f19;
-    color: #e2e8f0;
+    background-color: #DDEEEA !important;
+    color: #212529 !important;
 }
 
 [data-testid="stSidebar"] {
-    background-color: #0f172a !important;
-    border-right: 1px solid #1e293b;
+    background-color: #FFC400 !important;
+    border-right: none;
+    border-radius: 0 35px 35px 0;
+    box-shadow: 5px 0 20px rgba(0,0,0,0.08);
+    min-width: 260px !important;
+    max-width: 260px !important;
+}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p, 
+[data-testid="stSidebar"] span, [data-testid="stSidebar"] h1 {
+    color: #212529 !important;
 }
 
 code, pre {
@@ -53,28 +61,25 @@ code, pre {
     font-size: 0.9rem !important;
 }
 
-/* Custom card container with glassmorphic glow */
+/* Custom card container (Light Pastel Version) */
 .glass-card {
-    background: rgba(30, 41, 59, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
+    background: #FFFFFF;
+    border-radius: 20px;
     padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
+    color: #212529;
 }
 
 .glass-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(99, 102, 241, 0.4);
-    box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
-/* Gradient header title */
+/* Gradient header title (Darker for Light Mode) */
 .gradient-title {
-    background: linear-gradient(135deg, #818cf8 0%, #34d399 50%, #22d3ee 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #059669 50%, #0284c7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 2.8rem;
@@ -84,11 +89,11 @@ code, pre {
 }
 
 .glow-text {
-    text-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+    text-shadow: none;
 }
 
 .subtitle {
-    color: #94a3b8;
+    color: #475569;
     font-size: 1.1rem;
     margin-bottom: 30px;
 }
@@ -128,14 +133,12 @@ code, pre {
 
 /* Step cards for recovery logging */
 .step-card {
-    border-left: 4px solid #6366f1;
-    background: rgba(30, 41, 59, 0.3);
+    border-left: 4px solid #4f46e5;
+    background: #FFFFFF;
     padding: 15px 20px;
     border-radius: 0 12px 12px 0;
     margin-bottom: 12px;
-    border-top: 1px solid rgba(255,255,255,0.03);
-    border-right: 1px solid rgba(255,255,255,0.03);
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     transition: all 0.3s ease;
 }
 
@@ -157,7 +160,7 @@ code, pre {
 
 .step-desc {
     font-size: 0.9rem;
-    color: #94a3b8;
+    color: #475569;
 }
 
 /* Sidebar styling overrides */
@@ -165,10 +168,46 @@ code, pre {
     background-color: transparent !important;
 }
 
+/* Hilangkan bar putih kosong di bagian paling atas (Header) */
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Sembunyikan tombol Deploy dan Menu tiga titik (Toolbar) */
+.stDeployButton {display: none !important;}
+[data-testid="stToolbar"] {display: none !important;}
+
+/* Radio button text sidebar (Dibuat lebih lega dan mulus) */
+div.stRadio > div[role="radiogroup"] > label > div:first-child {
+    display: none !important;
+}
+div.stRadio > div[role="radiogroup"] > label {
+    margin-bottom: 12px;
+    padding: 15px 25px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+}
+div.stRadio > div[role="radiogroup"] > label:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateX(4px);
+}
+/* Style saat menu aktif / diklik */
+div.stRadio > div[role="radiogroup"] > label:has(input:checked) {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transform: translateX(4px);
+}
+
 /* Custom Divider line */
 .divider {
     height: 1px;
-    background: linear-gradient(90deg, rgba(99,102,241,0.2) 0%, rgba(34,211,238,0.2) 50%, rgba(99,102,241,0) 100%);
+    background: rgba(0, 0, 0, 0.08);
     margin: 25px 0;
 }
 </style>
@@ -183,8 +222,8 @@ def clear_temp():
 # Navigation setup
 st.sidebar.markdown(
     '<div style="text-align: center; padding: 10px 0;">'
-    '<h1 style="color: #818cf8; font-size: 1.6rem; font-weight: 800; margin-bottom: 0;">🛡️ STEGO-GUARD</h1>'
-    '<p style="color: #64748b; font-size: 0.85rem; margin-top: 4px;">Multilayer Cloud Simulator</p>'
+    '<h1 style="color: #111827; font-size: 1.4rem; font-weight: 900; margin-bottom: 0;">🛡️ STEGO-GUARD</h1>'
+    '<p style="color: #475569; font-size: 0.8rem; margin-top: 4px; font-weight: 600;">Multilayer Simulator</p>'
     '</div>',
     unsafe_allow_html=True
 )
@@ -194,7 +233,8 @@ st.sidebar.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 menu = st.sidebar.radio(
     "NAVIGATION MENU",
     ["📊 Dashboard Overview", "🔒 Secure File Page", "🔑 Recover File Page", "🔗 Blockchain Explorer"],
-    index=0
+    index=0,
+    label_visibility="collapsed"
 )
 
 st.sidebar.markdown('<div class="divider"></div>', unsafe_allow_html=True)
@@ -203,13 +243,13 @@ st.sidebar.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 chain_valid = blockchain.verify_blockchain()
 chain_len = len(blockchain.load_blockchain())
 
-st.sidebar.markdown('<p style="font-weight:600; color:#94a3b8; font-size:0.8rem; margin-bottom:8px;">SYSTEM STATUS</p>', unsafe_allow_html=True)
+st.sidebar.markdown('<p style="font-weight:800; color:#111827; font-size:0.85rem; margin-bottom:8px;">SYSTEM STATUS</p>', unsafe_allow_html=True)
 if chain_valid:
-    st.sidebar.markdown('<span class="status-badge badge-success">● Blockchain Secured</span>', unsafe_allow_html=True)
+    st.sidebar.markdown('<span class="status-badge badge-success" style="background-color: #FFFFFF; border-color: #10b981; font-weight: 800;">● Blockchain Secured</span>', unsafe_allow_html=True)
 else:
-    st.sidebar.markdown('<span class="status-badge badge-danger">● Blockchain Corrupted</span>', unsafe_allow_html=True)
+    st.sidebar.markdown('<span class="status-badge badge-danger" style="background-color: #FFFFFF; border-color: #ef4444; font-weight: 800;">● Blockchain Corrupted</span>', unsafe_allow_html=True)
 
-st.sidebar.markdown(f'<p style="font-size:0.85rem; color:#64748b; margin-top:8px;">Ledger Height: <b>{chain_len} Blocks</b></p>', unsafe_allow_html=True)
+st.sidebar.markdown(f'<p style="font-size:0.85rem; color:#475569; font-weight:600; margin-top:8px;">Ledger Height: <b style="color:#111827;">{chain_len} Blocks</b></p>', unsafe_allow_html=True)
 
 # ----------------- PAGE 1: DASHBOARD OVERVIEW -----------------
 if menu == "📊 Dashboard Overview":
@@ -263,7 +303,7 @@ if menu == "📊 Dashboard Overview":
     left_col, right_col = st.columns([3, 2])
 
     with left_col:
-        st.markdown('<h3 style="color:#e2e8f0; font-weight:700;">🔄 Alur Keamanan Multilayer</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#111827; font-weight:700;">🔄 Alur Keamanan Multilayer</h3>', unsafe_allow_html=True)
         st.markdown(
             '<div class="glass-card" style="padding: 25px;">'
             '<p style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">'
@@ -281,7 +321,7 @@ if menu == "📊 Dashboard Overview":
         )
 
     with right_col:
-        st.markdown('<h3 style="color:#e2e8f0; font-weight:700;">🔑 Manajemen Kunci RSA</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#111827; font-weight:700;">🔑 Manajemen Kunci RSA</h3>', unsafe_allow_html=True)
         
         priv_exists = os.path.exists("keys/private.pem")
         pub_exists = os.path.exists("keys/public.pem")
@@ -330,7 +370,7 @@ elif menu == "🔒 Secure File Page":
         left, right = st.columns([1, 1])
 
         with left:
-            st.markdown('<h4 style="color:#a5b4fc;">Upload Berkas & Cover</h4>', unsafe_allow_html=True)
+            st.markdown('<h4 style="color:#4f46e5;">Upload Berkas & Cover</h4>', unsafe_allow_html=True)
             
             uploaded_file = st.file_uploader("Upload File Sensitif (Apapun)", type=None)
             
@@ -341,7 +381,7 @@ elif menu == "🔒 Secure File Page":
                 uploaded_cover = st.file_uploader("Upload Gambar Cover Kustom (PNG)", type=["png"])
 
         with right:
-            st.markdown('<h4 style="color:#a5b4fc;">Konfigurasi Keamanan</h4>', unsafe_allow_html=True)
+            st.markdown('<h4 style="color:#4f46e5;">Konfigurasi Keamanan</h4>', unsafe_allow_html=True)
             st.markdown(
                 '<div class="glass-card" style="padding: 20px;">'
                 '<ul style="padding-left: 20px; font-size:0.9rem;">'
@@ -463,7 +503,7 @@ elif menu == "🔑 Recover File Page":
     col_inputs, col_audit = st.columns([2, 3])
 
     with col_inputs:
-        st.markdown('<h3 style="color:#a5b4fc; font-size:1.3rem; font-weight:700;">📂 Input Bahan Pemulihan</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#4f46e5; font-size:1.3rem; font-weight:700;">📂 Input Bahan Pemulihan</h3>', unsafe_allow_html=True)
         
         stego_upload = st.file_uploader("1. Unggah Gambar Stego (PNG)", type=["png"])
         enc_upload = st.file_uploader("2. Unggah Berkas Terenkripsi (.enc)", type=["enc"])
@@ -488,7 +528,7 @@ elif menu == "🔑 Recover File Page":
         recover_btn = st.button("🚀 Start Deep Recovery Audit", use_container_width=True)
 
     with col_audit:
-        st.markdown('<h3 style="color:#a5b4fc; font-size:1.3rem; font-weight:700;">🔍 Diagnostic Security Audit Logs</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#4f46e5; font-size:1.3rem; font-weight:700;">🔍 Diagnostic Security Audit Logs</h3>', unsafe_allow_html=True)
         
         # Clear old recover results if uploads change
         stego_name = stego_upload.name if stego_upload else ""
@@ -771,7 +811,7 @@ elif menu == "🔗 Blockchain Explorer":
                     <span style="font-weight:800; font-size:1.15rem; color:{border_color};">BLOCK #{block['index']}</span>
                     <span style="font-size:0.8rem; color:#64748b;">⏳ Timestamp: {block['timestamp']}</span>
                 </div>
-                <div style="font-size:0.85rem; color:#cbd5e1; line-height: 1.8;">
+                <div style="font-size:0.85rem; color:#475569; line-height: 1.8;">
                     <div style="margin-bottom:4px;"><b>📂 File SHA-256 Hash:</b> <code style="color:#34d399; font-size:0.78rem;">{block['file_hash']}</code></div>
                     <div style="margin-bottom:4px;"><b>🔗 Previous Block Hash:</b> <code style="color:#94a3b8; font-size:0.78rem;">{block['previous_hash']}</code></div>
                     <div><b>🔒 Current Block Hash:</b> <code style="color:#22d3ee; font-size:0.78rem;">{block['current_hash']}</code></div>
