@@ -3,3 +3,4 @@ storage/
 *.pem
 __pycache__/
 .env
+venv/

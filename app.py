@@ -33,69 +33,71 @@ os.makedirs("storage/temp", exist_ok=True)
 os.makedirs("keys", exist_ok=True)
 
 # Custom premium styling (Dark Mode & Glassmorphism)
+# Custom Premium Light & Vibrant Styling
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
 
-html, body, [data-testid="stAppViewContainer"] {
+/* Main App Background Override */
+html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
     font-family: 'Outfit', sans-serif;
-    background-color: #0b0f19;
-    color: #e2e8f0;
+    background-color: #f8fafc !important; /* Soft light gray-blue background */
+    color: #1e293b !important; /* Deep slate for high contrast readability */
 }
 
+/* Sidebar Custom Styling */
 [data-testid="stSidebar"] {
-    background-color: #0f172a !important;
-    border-right: 1px solid #1e293b;
+    background-color: #ffffff !important;
+    border-right: 1px solid #92c0fc !important;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
 }
 
+/* Typography & Code blocks */
 code, pre {
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.9rem !important;
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
 }
 
-/* Custom card container with glassmorphic glow */
+/* Custom card container (Vibrant & Light Accent) */
 .glass-card {
-    background: rgba(30, 41, 59, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: 1px solid #92c0fc;
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(99, 102, 241, 0.4);
-    box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
+    border-color: #6366f1; /* Indigo glow on hover */
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.1);
 }
 
-/* Gradient header title */
+/* Bright & Vibrant Gradient header title */
 .gradient-title {
-    background: linear-gradient(135deg, #818cf8 0%, #34d399 50%, #22d3ee 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 50%, #10b981 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 2.8rem;
     font-weight: 800;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     letter-spacing: -0.5px;
 }
 
-.glow-text {
-    text-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
-}
-
 .subtitle {
-    color: #94a3b8;
+    color: #475569;
     font-size: 1.1rem;
     margin-bottom: 30px;
+    font-weight: 400;
 }
 
-/* Status Badges */
+/* High Contrast Status Badges */
 .status-badge {
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-weight: 600;
     font-size: 0.85rem;
@@ -103,73 +105,77 @@ code, pre {
 }
 
 .badge-success {
-    background-color: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
 }
 
 .badge-warning {
-    background-color: rgba(245, 158, 11, 0.15);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
 }
 
 .badge-danger {
-    background-color: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
 }
 
 .badge-info {
-    background-color: rgba(99, 102, 241, 0.15);
-    color: #818cf8;
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    background-color: #e0e7ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
 }
 
 /* Step cards for recovery logging */
 .step-card {
-    border-left: 4px solid #6366f1;
-    background: rgba(30, 41, 59, 0.3);
-    padding: 15px 20px;
-    border-radius: 0 12px 12px 0;
+    border-left: 5px solid #6366f1;
+    background: #ffffff;
+    padding: 16px 20px;
+    border-radius: 0 14px 14px 0;
     margin-bottom: 12px;
-    border-top: 1px solid rgba(255,255,255,0.03);
-    border-right: 1px solid rgba(255,255,255,0.03);
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    transition: all 0.3s ease;
+    border-top: 1px solid #92c0fc;
+    border-right: 1px solid #92c0fc;
+    border-bottom: 1px solid #92c0fc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+    transition: all 0.2s ease;
 }
 
 .step-success {
     border-left-color: #10b981 !important;
-    background: rgba(16, 185, 129, 0.05);
+    background: #f0fdf4;
 }
 
 .step-failed {
     border-left-color: #ef4444 !important;
-    background: rgba(239, 68, 68, 0.05);
+    background: #fef2f2;
 }
 
 .step-title {
     font-weight: 700;
     font-size: 1.05rem;
+    color: #1e293b;
     margin-bottom: 4px;
 }
 
 .step-desc {
     font-size: 0.9rem;
-    color: #94a3b8;
-}
-
-/* Sidebar styling overrides */
-.css-17eq0hr, [data-testid="stSidebarNav"] {
-    background-color: transparent !important;
+    color: #64748b;
 }
 
 /* Custom Divider line */
 .divider {
     height: 1px;
-    background: linear-gradient(90deg, rgba(99,102,241,0.2) 0%, rgba(34,211,238,0.2) 50%, rgba(99,102,241,0) 100%);
+    background: linear-gradient(90deg, rgba(99,102,241,0.3) 0%, rgba(34,211,238,0.3) 50%, rgba(99,102,241,0) 100%);
     margin: 25px 0;
+}
+
+/* Streamlit Native Widget Adjustments for Light Mode */
+div[data-testid="stForm"] {
+    background-color: #ffffff !important;
+    border: 1px solid #92c0fc !important;
+    border-radius: 14px !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -263,7 +269,7 @@ if menu == "📊 Dashboard Overview":
     left_col, right_col = st.columns([3, 2])
 
     with left_col:
-        st.markdown('<h3 style="color:#e2e8f0; font-weight:700;">🔄 Alur Keamanan Multilayer</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#92c0fc; font-weight:700;">🔄 Alur Keamanan Multilayer</h3>', unsafe_allow_html=True)
         st.markdown(
             '<div class="glass-card" style="padding: 25px;">'
             '<p style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">'
@@ -281,7 +287,7 @@ if menu == "📊 Dashboard Overview":
         )
 
     with right_col:
-        st.markdown('<h3 style="color:#e2e8f0; font-weight:700;">🔑 Manajemen Kunci RSA</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#92c0fc; font-weight:700;">🔑 Manajemen Kunci RSA</h3>', unsafe_allow_html=True)
         
         priv_exists = os.path.exists("keys/private.pem")
         pub_exists = os.path.exists("keys/public.pem")
@@ -754,8 +760,8 @@ elif menu == "🔗 Blockchain Explorer":
         for block in chain:
             # We determine the theme of genesis block vs transaction blocks
             is_genesis = block["file_hash"] == "GENESIS_BLOCK"
-            border_color = "#10b981" if is_genesis else "#6366f1"
-            bg_gradient = "linear-gradient(135deg, rgba(16,185,129,0.05) 0%, rgba(30,41,59,0.3) 100%)" if is_genesis else "linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(30,41,59,0.3) 100%)"
+            border_color = "#10b981" if is_genesis else "#4f46e5"
+            bg_gradient = "linear-gradient(135deg, rgba(16,185,129,0.08) 0%, #ffffff 100%)" if is_genesis else "linear-gradient(135deg, rgba(79,102,241,0.05) 0%, #ffffff 100%)"
             
             block_html = f"""
             <div style="
