@@ -43,9 +43,24 @@ html, body, [data-testid="stAppViewContainer"] {
     color: #e2e8f0;
 }
 
-[data-testid="stSidebar"] {
+[data-testid="stSidebar"], [data-testid="stSidebar"] > div {
     background-color: #0f172a !important;
     border-right: 1px solid #1e293b;
+}
+
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p, 
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] .stMarkdown p {
+    color: #e2e8f0 !important;
+}
+
+.sidebar-title {
+    color: #818cf8 !important;
+}
+
+.sidebar-subtitle {
+    color: #94a3b8 !important;
 }
 
 code, pre {
@@ -88,7 +103,8 @@ code, pre {
 }
 
 .subtitle {
-    color: #94a3b8;
+    color: var(--text-color);
+    opacity: 0.8;
     font-size: 1.1rem;
     margin-bottom: 30px;
 }
@@ -157,7 +173,8 @@ code, pre {
 
 .step-desc {
     font-size: 0.9rem;
-    color: #94a3b8;
+    color: var(--text-color);
+    opacity: 0.8;
 }
 
 /* Sidebar styling overrides */
@@ -183,8 +200,8 @@ def clear_temp():
 # Navigation setup
 st.sidebar.markdown(
     '<div style="text-align: center; padding: 10px 0;">'
-    '<h1 style="color: #818cf8; font-size: 1.6rem; font-weight: 800; margin-bottom: 0;">🛡️ STEGO-GUARD</h1>'
-    '<p style="color: #64748b; font-size: 0.85rem; margin-top: 4px;">Multilayer Cloud Simulator</p>'
+    '<h1 class="sidebar-title" style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0;">🛡️ STEGO-GUARD</h1>'
+    '<p class="sidebar-subtitle" style="font-size: 0.85rem; margin-top: 4px;">Multilayer Cloud Simulator</p>'
     '</div>',
     unsafe_allow_html=True
 )
@@ -203,13 +220,13 @@ st.sidebar.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 chain_valid = blockchain.verify_blockchain()
 chain_len = len(blockchain.load_blockchain())
 
-st.sidebar.markdown('<p style="font-weight:600; color:#94a3b8; font-size:0.8rem; margin-bottom:8px;">SYSTEM STATUS</p>', unsafe_allow_html=True)
+st.sidebar.markdown('<p class="sidebar-subtitle" style="font-weight:600; font-size:0.8rem; margin-bottom:8px;">SYSTEM STATUS</p>', unsafe_allow_html=True)
 if chain_valid:
     st.sidebar.markdown('<span class="status-badge badge-success">● Blockchain Secured</span>', unsafe_allow_html=True)
 else:
     st.sidebar.markdown('<span class="status-badge badge-danger">● Blockchain Corrupted</span>', unsafe_allow_html=True)
 
-st.sidebar.markdown(f'<p style="font-size:0.85rem; color:#64748b; margin-top:8px;">Ledger Height: <b>{chain_len} Blocks</b></p>', unsafe_allow_html=True)
+st.sidebar.markdown(f'<p class="sidebar-subtitle" style="font-size:0.85rem; margin-top:8px;">Ledger Height: <b>{chain_len} Blocks</b></p>', unsafe_allow_html=True)
 
 # ----------------- PAGE 1: DASHBOARD OVERVIEW -----------------
 if menu == "📊 Dashboard Overview":
@@ -296,6 +313,24 @@ if menu == "📊 Dashboard Overview":
             with st.expander("Tampilkan Informasi Kunci"):
                 with open("keys/public.pem", "r") as f:
                     st.code(f.read(), language="text")
+            
+            with st.expander("📥 Unduh Kunci RSA (.pem)"):
+                with open("keys/public.pem", "rb") as f:
+                    st.download_button(
+                        label="Download Kunci Publik (public.pem)",
+                        data=f.read(),
+                        file_name="public.pem",
+                        mime="application/x-pem-file",
+                        use_container_width=True
+                    )
+                with open("keys/private.pem", "rb") as f:
+                    st.download_button(
+                        label="Download Kunci Privat (private.pem)",
+                        data=f.read(),
+                        file_name="private.pem",
+                        mime="application/x-pem-file",
+                        use_container_width=True
+                    )
         else:
             st.markdown(
                 '<div style="margin-bottom:15px;">'
